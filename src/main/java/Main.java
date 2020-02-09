@@ -1,21 +1,21 @@
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import service.gif.FrameCreator;
-import service.gif.GifCreator;
 import telegram.bot.GifMakerBot;
 
 public class Main {
+    private static final Logger log = LoggerFactory.getLogger(Main.class);
     public static void main(String[] args) {
-        //new GifCreator().createGif("hello");
-
+        log.info("Telegram bot started.");
         ApiContextInitializer.init();
         TelegramBotsApi api = new TelegramBotsApi();
 
         try {
             api.registerBot(new GifMakerBot());
         } catch (TelegramApiRequestException e) {
-            e.printStackTrace();
+            log.error("Telegram api exception.", e);
         }
     }
 }
