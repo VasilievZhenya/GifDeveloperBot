@@ -24,7 +24,7 @@ public class GifMakerBot extends TelegramLongPollingBot {
 	private String botToken;
 
 	public GifMakerBot() {
-		Properties properties = PropertiesReader.readProperties(PROPERTIES_PATH);
+		//Properties properties = PropertiesReader.readProperties(PROPERTIES_PATH);
 		botUsername = System.getenv("botUsername");
 		botToken = System.getenv("botToken");
 	}
