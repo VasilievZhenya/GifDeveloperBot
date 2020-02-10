@@ -22,12 +22,12 @@ public class Main {
             log.error("Telegram api exception.", e);
         }
 
-        try (ServerSocket serverSocket = new ServerSocket(Integer.valueOf(System.getenv("PORT")))) {
+        /*try (ServerSocket serverSocket = new ServerSocket(Integer.valueOf(System.getenv("PORT")))) {
             while (true) {
                 Socket clientSocket = serverSocket.accept();
             }
         } catch (IOException e) {
             log.error("Error while listening port.", e);
-        }
+        }*/
     }
 }

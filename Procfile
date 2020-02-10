@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -Dserver.port=$PORT -jar ./target/text-to-gif-bot-impl-1.0-SNAPSHOT-jar-with-dependencies.jar
+worker: java -jar ./target/text-to-gif-bot-impl-1.0-SNAPSHOT-jar-with-dependencies.jar
