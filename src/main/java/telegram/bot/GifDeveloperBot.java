@@ -9,22 +9,23 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import service.gif.GifCreator;
-import service.props.PropertiesReader;
+import statistics.BotStatistics;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.InputMismatchException;
-import java.util.Properties;
 
-public class GifMakerBot extends TelegramLongPollingBot {
-	private static final Logger log = LoggerFactory.getLogger(GifMakerBot.class);
-	private static final String PROPERTIES_PATH = "config/gifDeveloperBot.properties";
+/**
+ * This bot creates gifs and sends them to user with specified text filled.
+ */
+public class GifDeveloperBot extends TelegramLongPollingBot {
+	private static final Logger log = LoggerFactory.getLogger(GifDeveloperBot.class);
 	private GifCreator gifCreator = new GifCreator();
 	private String botUsername;
 	private String botToken;
 
-	public GifMakerBot() {
-		//Properties properties = PropertiesReader.readProperties(PROPERTIES_PATH);
+
+	public GifDeveloperBot() {
 		botUsername = System.getenv("botUsername");
 		botToken = System.getenv("botToken");
 	}
@@ -35,11 +36,13 @@ public class GifMakerBot extends TelegramLongPollingBot {
 			Message message = update.getMessage();
 			if (message.hasText()) {
 				long chatId = message.getChatId();
+				addRecord();
 				try {
 					try {
 						File gif = gifCreator.createGif(message.getText());
 						SendAnimation response = new SendAnimation().setAnimation(gif).setChatId(chatId);
 						execute(response);
+						gif.delete();
 					} catch (InputMismatchException e) {
 						SendMessage response = new SendMessage(chatId, e.getMessage());
 						execute(response);
@@ -61,5 +64,22 @@ public class GifMakerBot extends TelegramLongPollingBot {
 	@Override
 	public String getBotToken() {
 		return botToken;
+	}
+
+	/**
+	 * Adds new record to Records table if new request received.
+	 */
+	private void addRecord() {
+		BotStatistics botStatistics = new BotStatistics();
+		botStatistics.setDaemon(true);
+		botStatistics.start();
+	}
+
+	/**
+	 * Starts sending bot usage statistic on every 24 hour.
+	 */
+	public void collectStatistic() {
+		GifDeveloperBotStatistic statistic = new GifDeveloperBotStatistic();
+		statistic.start();
 	}
 }

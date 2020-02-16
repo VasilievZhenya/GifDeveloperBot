@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.InputMismatchException;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +30,7 @@ public class GifCreator {
 	private static final int MAX_TEXT_LENGTH = LENGTH_PER_LINE * MAX_ROWS_AMOUNT;
 	private static final String WORD_IS_TOO_LONG = "Single word length cannot be more than {0} symbols.";
 	private static final String TEXT_IS_TOO_LONG = "Text should be less than {0} symbols.";
-	private static final File OUTPUT_FILE = new File("res.gif");
+	private static final File OUTPUT_FILE = new File(String.format("res%s.gif", new Date().getTime()));
 
 	private FrameCreator frameCreator = new FrameCreator();
 
@@ -56,7 +57,7 @@ public class GifCreator {
 	 * Splits input text into lines to be printed.
 	 *
 	 * @param text input text
-	 * @return
+	 * @return list of lines to be printed
 	 * @throws InputMismatchException if the whole text or single word is too long
 	 * @see GifCreator#MAX_TEXT_LENGTH
 	 * @see GifCreator#LENGTH_PER_LINE
@@ -115,6 +116,8 @@ public class GifCreator {
 			gifWriter.writeToSequence(temp, null);
 		}
 		gifWriter.endWriteSequence();
+
+		ios.close();
 	}
 
 	/**

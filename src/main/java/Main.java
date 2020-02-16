@@ -3,11 +3,7 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.ApiContextInitializer;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiRequestException;
-import telegram.bot.GifMakerBot;
-
-import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import telegram.bot.GifDeveloperBot;
 
 public class Main {
     private static final Logger log = LoggerFactory.getLogger(Main.class);
@@ -16,18 +12,14 @@ public class Main {
         ApiContextInitializer.init();
         TelegramBotsApi api = new TelegramBotsApi();
 
+        GifDeveloperBot bot = new GifDeveloperBot();
+
         try {
-            api.registerBot(new GifMakerBot());
+            api.registerBot(bot);
         } catch (TelegramApiRequestException e) {
             log.error("Telegram api exception.", e);
         }
 
-        /*try (ServerSocket serverSocket = new ServerSocket(Integer.valueOf(System.getenv("PORT")))) {
-            while (true) {
-                Socket clientSocket = serverSocket.accept();
-            }
-        } catch (IOException e) {
-            log.error("Error while listening port.", e);
-        }*/
+        bot.collectStatistic();
     }
 }
