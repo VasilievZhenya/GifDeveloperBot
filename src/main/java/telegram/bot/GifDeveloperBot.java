@@ -10,6 +10,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import service.gif.GifCreator;
 import statistics.BotStatistics;
+import statistics.database.executor.PostgresExecutor;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,11 +36,17 @@ public class GifDeveloperBot extends TelegramLongPollingBot {
 		if (update.hasMessage()) {
 			Message message = update.getMessage();
 			if (message.hasText()) {
+				String text = message.getText();
+				switch (text) {
+					case "/stat":
+						new GifDeveloperBotStatistic().sendDailyStatistic(new PostgresExecutor().getStatistic());
+						return;
+				}
 				long chatId = message.getChatId();
 				addRecord();
 				try {
 					try {
-						File gif = gifCreator.createGif(message.getText());
+						File gif = gifCreator.createGif(text);
 						SendAnimation response = new SendAnimation().setAnimation(gif).setChatId(chatId);
 						execute(response);
 						gif.delete();
