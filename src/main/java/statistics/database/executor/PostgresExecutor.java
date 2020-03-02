@@ -10,6 +10,7 @@ import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Executes operations on Postgres database.
@@ -42,7 +43,8 @@ public class PostgresExecutor {
 		try (Connection connection = postgresConnection.getConnection()) {
 			QueryRunner runner = new QueryRunner();
 			String sql = "select amount from records where record_date = current_date";
-			amount = BigInteger.valueOf(runner.query(connection, sql, new ScalarHandler<>()));
+			Long res = runner.query(connection, sql, new ScalarHandler<>());
+			amount = BigInteger.valueOf(Optional.ofNullable(res).orElse(0L));
 		} catch (SQLException e) {
 			log.error("Failed to get statistic.", e);
 		}
